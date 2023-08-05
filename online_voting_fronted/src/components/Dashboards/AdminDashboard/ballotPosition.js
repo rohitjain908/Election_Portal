@@ -75,7 +75,7 @@ class BallotPosition extends Component{
 
         return(
             <>
-                <Sidebar/>
+                <Sidebar path = "Ballot Positions"/>
                 <main style={{marginTop : '56px', marginBottom : '10px'}}>
                     
                     

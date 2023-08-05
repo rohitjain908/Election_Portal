@@ -85,7 +85,7 @@ class Votes extends Component{
   
         return(
             <>
-                <Sidebar/>
+                <Sidebar path = "Votes"/>
                 <main style={{marginTop : '56px'}}>
                     <div class="container pt-4">
                         <div style = {{padding: '5px', fontSize: '25px'}}>

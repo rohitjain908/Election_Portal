@@ -260,7 +260,7 @@ class Position extends Component{
         console.log(this.state.abc, this.state)
         return(
             <>
-                <Sidebar/>
+                <Sidebar path = "Positions"/>
                 <main style={{marginTop : '56px', marginBottom : '10px'}}>
                     <div class="container pt-4">
                         <div style = {{padding: '5px', fontSize: '25px'}}>

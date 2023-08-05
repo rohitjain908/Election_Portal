@@ -65,7 +65,7 @@ class Dashboard extends Component{
         const margin = {top: 20, right: 20, bottom: 30, left: 40};
         return(
             <>
-                <Sidebar/>
+                <Sidebar path = "Dashboard"/>
                 <main style={{marginTop : '56px'}}>
                     <div class="container pt-4">
                         <div style = {{padding: '5px', fontSize: '25px'}}>

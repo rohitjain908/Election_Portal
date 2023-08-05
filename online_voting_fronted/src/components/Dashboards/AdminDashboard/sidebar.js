@@ -1,60 +1,90 @@
 import { Component } from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Nav, NavItem, NavLink } from 'reactstrap';
+import { redirect } from "react-router-dom";
 
 class Sidebar extends Component{
 
+
+    constructor(props){
+        super(props);
+
+        //console.log("props ", props.path)
+
+        this.state = {
+            sideBarData: [
+                {
+                    redirectLink : '/admin-dashboard',
+                    iconClass: "fas fa-tachometer-alt fa-fw me-3",
+                    title: 'Dashboard',
+                    active: props.path == 'Dashboard' ? 'active': ''
+                },
+                {
+                    redirectLink : '/admin-dashboard/votes',
+                    iconClass: "fas fa-lock fa-fw me-3",
+                    title: 'Votes',
+                    active: props.path == 'Votes' ? 'active': ''
+                },
+                {
+                    redirectLink : '/admin-dashboard/voters',
+                    iconClass: "fa-solid fa-users fa-fw me-3",
+                    title: 'Voters',
+                    active: props.path == 'Voters' ? 'active': ''
+                },
+                {
+                    redirectLink : '/admin-dashboard/position',
+                    iconClass: "fas fa-chart-pie fa-fw me-3",
+                    title: 'Positions',
+                    active: props.path == 'Positions' ? 'active': ''
+                },
+                {
+                    redirectLink : '/admin-dashboard/candidates',
+                    iconClass: "far fa-user fa-fw me-3",
+                    title: 'Candidates',
+                    active: props.path == 'Candidates' ? 'active': ''
+                },
+                {
+                    redirectLink : '/admin-dashboard/ballotPosition',
+                    iconClass: "fas fa-globe fa-fw me-3",
+                    title: 'Ballot Positions',
+                    active: props.path == 'Ballot Positions' ? 'active': ''
+                }
+                
+            ]
+        }
+    }
+
+
+
     render(){
+
         return(
             <>
                 <header>
+                    {/* <!-- Sidebar --> */}
                     <nav
                         id="sidebarMenu"
                         class="collapse d-lg-block sidebar collapse bg-white"
-                        >
+                    >
                         <div class="position-sticky">
-                        <div class="list-group list-group-flush mx-3 mt-4">
-                            <a
-                            href="/admin-dashboard"
-                            class="list-group-item list-group-item-action py-2 ripple"
-                            aria-current="true" 
-                            >
-                            <i class="fas fa-tachometer-alt fa-fw me-3"></i
-                                ><span>Dashboard</span>
-                            </a>
-                        
-                            <a
-                            href="/admin-dashboard/votes"
-                            class="list-group-item list-group-item-action py-2 ripple active"
-                            ><i class="fas fa-lock fa-fw me-3"></i><span>Votes</span></a
-                            >
-                            <a
-                            href="/admin-dashboard/voters"
-                            class="list-group-item list-group-item-action py-2 ripple"
-                            ><i class="fa-solid fa-users  fa-fw me-3"></i>
-                            <span>Voters</span></a
-                            >
-                            <a
-                            href="/admin-dashboard/position"
-                            class="list-group-item list-group-item-action py-2 ripple"
-                            >
-                            <i class="fas fa-chart-pie fa-fw me-3"></i><span>Positions</span>
-                            </a>
-                            <a
-                            href="/admin-dashboard/candidates"
-                            class="list-group-item list-group-item-action py-2 ripple"
-                            ><i class="far fa-user fa-fw me-3"></i><span>Candidates</span></a
-                            >
-                            <a
-                            href="/admin-dashboard/ballotPosition"
-                            class="list-group-item list-group-item-action py-2 ripple"
-                            ><i class="fas fa-globe fa-fw me-3"></i
-                            ><span>Ballot Positions</span></a
-                            > 
+                            <div class="list-group list-group-flush mx-3 mt-4">
+                                {this.state.sideBarData.map(item => {
+                                    return(
+                                        <a
+                                            key = {item.title}
+                                            href={item.redirectLink}
+                                            class={`list-group-item list-group-item-action py-2 ripple ${item.active}`}
+                                            aria-current="true" 
+                                        >
+                                            <i class={item.iconClass}></i>
+                                            <span>{item.title}</span>
+                                        </a>
+                                    )
+                                })} 
+                            </div>
                         </div>
-                    </div>
-                </nav>
-                {/* <!-- Sidebar --> */}
+                    </nav>
+                    {/* <!-- Sidebar --> */}
 
                 {/* <!-- Navbar --> */}
                 <nav

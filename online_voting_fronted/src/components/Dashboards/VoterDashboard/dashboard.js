@@ -233,7 +233,7 @@ class DashBoard extends Component {
         if(this.state.voted){
             return(
                 <>
-                    <Header/>
+                    <Header />
                     <div style={{marginTop : '100px' , marginLeft:'auto',marginRight:'auto',display : 'flex', flexDirection:'column',justifyContent : 'center',textAlign : 'center' ,gap:'20px'}}>
                             <h8>You have already voted for this elelction!</h8>
                             <button class = "btn btn-warning" style = {{width : '30%', marginLeft:'auto', marginRight:'auto'}} onClick={this.viewBallot}><i class="fa fa-eye" aria-hidden="true"></i>  View Your Ballot</button>
@@ -266,19 +266,19 @@ class DashBoard extends Component {
                 <div>
                     <Header/>
                     
-                    <div style={{marginTop : '100px' , marginLeft:'auto',marginRight:'auto',display : 'flex', flexDirection:'column',justifyContent : 'center',textAlign : 'center' ,gap:'20px'}}>
+                    <div style={{marginTop : '100px' , marginLeft:'auto',marginRight:'auto',display : 'flex', flexDirection:'column',justifyContent : 'center',textAlign : 'center' ,gap:'20px', fontWeight: 'bold'}}>
                         <p>You can select upto 1 candidate from each position</p>
                         {/* <div  style = {{marginLeft:'auto',display : 'flex', justifyContent : 'center', textAlign : 'center' ,flexDirection:'column',gap:'20px'}}>
                                 {cards}
                         </div> */}
                     </div>
                         <div  style = {{display : 'flex', justifyContent : 'center',textAlign : 'center'}}>
-                            <div class = "container" style = {{display : 'flex', justifyContent : 'center', textAlign : 'center' ,flexDirection:'column',gap:'20px'}}>
+                            <div class = "container" style = {{display : 'flex', justifyContent : 'center', textAlign : 'center' ,flexDirection:'column',gap:'20px', alignItems: 'center'}}>
                                 {cards}
                             </div>
                         </div>
-                        <div style = {{display : 'flex', justifyContent : 'center',textAlign : 'center', padding : '10px'}}>
-                            <button class = "btn btn-success" onClick={this.handleSubmit}>Submit</button>
+                        <div style = {{display : 'flex', justifyContent : 'center',textAlign : 'center', padding : '10px', marginTop: '20px'}}>
+                            <button class = "btn btn-success" style={{ fontSize: '25px'}} onClick={this.handleSubmit}>Submit</button>
                         </div>
                         
                     
