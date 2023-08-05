@@ -90,7 +90,7 @@ class Sidebar extends Component{
                 <nav
                     id="main-navbar"
                     class="navbar navbar-expand-lg navbar-light bg-white fixed-top"
-                    >
+                >
                     
                     {/* <!-- Container wrapper --> */}
                     <div class="container-fluid">
@@ -108,27 +108,9 @@ class Sidebar extends Component{
                     </button>
 
                     {/* <!-- Brand --> */}
-                    <a class="navbar-brand" href="#">
-                        <img
-                            src="https://mdbootstrap.com/img/logo/mdb-transaprent-noshadows.png"
-                            height="25"
-                            alt=""
-                            loading="lazy"
-                            />
+                    <a class="navbar-brand" href="/">
+                        <h3>Election Portal</h3>
                     </a>
-                    {/* <!-- Search form --> */}
-                    <form class="d-none d-md-flex input-group w-auto my-auto">
-                        <input
-                            autocomplete="off"
-                            type="search"
-                            class="form-control rounded"
-                            placeholder='Search (ctrl + "/" to focus)'
-                            style={{minWidth : '225px'}}
-                            />
-                        <span class="input-group-text border-0"
-                            ><i class="fas fa-search"></i
-                        ></span>
-                    </form>
 
                     {/* <!-- Right links --> */}
                     <ul class="navbar-nav ms-auto d-flex flex-row">

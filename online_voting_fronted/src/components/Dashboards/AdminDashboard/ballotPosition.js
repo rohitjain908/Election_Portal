@@ -1,6 +1,7 @@
 import { Component } from 'react';
 import { ballotPosition } from '../../../api';
 import Sidebar from "./sidebar";
+import Loading from '../../Loading';
 
 
 class BallotPosition extends Component{
@@ -9,7 +10,8 @@ class BallotPosition extends Component{
         super(props);
 
         this.state = {
-            ballotData : {}
+            ballotData : {},
+            loading: true
 
         }
     }
@@ -23,7 +25,9 @@ class BallotPosition extends Component{
         let body = {
             "adminUniversity" : "IIT BHU"
         }
-        await ballotPosition(body).then(res => {
+
+        setTimeout(async ()=> {
+            await ballotPosition(body).then(res => {
             console.log(res)
             let data = res['data']
             if(data['message'] == 'success'){
@@ -31,11 +35,15 @@ class BallotPosition extends Component{
                 data = data['data']
                 console.log(data)
                 this.setState({
-                    ballotData : data
+                    ballotData : data,
+                    loading: false
                 })
             }
 
         })
+
+        }, 500)
+       
     }
 
 
@@ -76,6 +84,11 @@ class BallotPosition extends Component{
         return(
             <>
                 <Sidebar path = "Ballot Positions"/>
+                {this.state.loading ? 
+                        <main style={{marginTop : '56px'}}>
+                            <Loading/>
+                        </main>
+                    :
                 <main style={{marginTop : '56px', marginBottom : '10px'}}>
                     
                     
@@ -93,6 +106,7 @@ class BallotPosition extends Component{
                         
                         </div>
                 </main>
+                }
             </>
         )
     }

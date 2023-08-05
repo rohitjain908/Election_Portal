@@ -10,6 +10,7 @@ import BootstrapTable from "react-bootstrap-table-next";
 import paginationFactory from "react-bootstrap-table2-paginator";
 import filterFactory, {textFilter, numberFilter } from 'react-bootstrap-table2-filter';
 import { votesList } from "../../../api";
+import Loading from "../../Loading";
 
 
 export const productsGenerator = quantity => {
@@ -27,7 +28,8 @@ class Votes extends Component{
         super(props)
 
         this.state = {
-            votesList : ''
+            votesList : '',
+            loading: true
         }
     }
 
@@ -41,17 +43,22 @@ class Votes extends Component{
         const obj = {
             adminUniversity : 'IIT BHU'
         }
-        votesList(obj).then(res =>{
-            //console.log(res)
-            let data = res['data']
-            if(data['messgae'] == 'success'){
-                // console.log("here")
-                // console.log(data['votesList'])
-                this.setState({
-                    votesList : data['votesList']
-                })
-            }
-       })
+
+        setTimeout(()=> {
+            votesList(obj).then(res =>{
+                //console.log(res)
+                let data = res['data']
+                if(data['messgae'] == 'success'){
+                    // console.log("here")
+                    // console.log(data['votesList'])
+                    this.setState({
+                        votesList : data['votesList'],
+                        loading: false
+                    })
+                }
+           })
+        }, 500)
+        
       }
 
     
@@ -86,6 +93,11 @@ class Votes extends Component{
         return(
             <>
                 <Sidebar path = "Votes"/>
+                {this.state.loading ? 
+                        <main style={{marginTop : '56px'}}>
+                            <Loading/>
+                        </main>
+                    :
                 <main style={{marginTop : '56px'}}>
                     <div class="container pt-4">
                         <div style = {{padding: '5px', fontSize: '25px'}}>
@@ -102,6 +114,7 @@ class Votes extends Component{
                         />
                     </div>
                 </main>
+                }
                 
             </>
         )

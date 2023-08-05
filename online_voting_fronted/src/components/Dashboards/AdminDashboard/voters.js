@@ -9,6 +9,7 @@ import paginationFactory from "react-bootstrap-table2-paginator";
 import filterFactory, {textFilter, numberFilter } from 'react-bootstrap-table2-filter';
 import { Button,Card,CardTitle,Col,Label,Modal,ModalBody,ModalHeader,Row,Form,FormGroup,Input } from 'reactstrap';
 import { voterList, getVoter, editVoter, deleteVoter, registerVoter } from "../../../api";
+import Loading from "../../Loading";
 
 const validateEmail = (email) => {
     return String(email)
@@ -34,7 +35,8 @@ class Voters extends Component{
             adminUniversity: '',
             password : '',
             confirmPassword : '',
-            error : ''
+            error : '',
+            loading: true
         }
     }
 
@@ -126,12 +128,6 @@ class Voters extends Component{
             confirmPassword : '',
             error : ''
         })
-
-
-
-
-
-
     }
 
     handleDelete = (event) =>{
@@ -256,30 +252,35 @@ class Voters extends Component{
         this.setState({
             adminUniversity : 'IIT BHU'
         })
-        voterList(obj).then(res =>{
-            //console.log(res)
-            let data = res['data']
-            if(data['messgae'] == 'success'){
-                let VoterList = data['voterList'];
-                let List = [];
-                VoterList.map((obj) =>{
-                    List.push(
-                        {
-                            fullName : obj['fullName'],
-                            email : obj['email'],
-                            action: 
-                                <span>
-                                    <button class = "btn btn-primary" value = {obj['id']} onClick = {(event) => this.handleEdit(event)}><i class="fas fa-edit"></i></button>
-                                    <button class = "btn btn-danger" value = {obj['id']} onClick = {(event) => this.handleDelete(event)} style = {{marginLeft : '10px'}}><i class="fa fa-trash" aria-hidden="true"></i></button>
-                                </span>
-                        }
-                    )
-                })
-                this.setState({
-                    voterList : List
-                })
-            }
-       })
+
+        setTimeout(()=> {
+            voterList(obj).then(res =>{
+                //console.log(res)
+                let data = res['data']
+                if(data['messgae'] == 'success'){
+                    let VoterList = data['voterList'];
+                    let List = [];
+                    VoterList.map((obj) =>{
+                        List.push(
+                            {
+                                fullName : obj['fullName'],
+                                email : obj['email'],
+                                action: 
+                                    <span>
+                                        <button class = "btn btn-primary" value = {obj['id']} onClick = {(event) => this.handleEdit(event)}><i class="fas fa-edit"></i></button>
+                                        <button class = "btn btn-danger" value = {obj['id']} onClick = {(event) => this.handleDelete(event)} style = {{marginLeft : '10px'}}><i class="fa fa-trash" aria-hidden="true"></i></button>
+                                    </span>
+                            }
+                        )
+                    })
+                    this.setState({
+                        voterList : List,
+                        loading: false
+                    })
+                }
+           })
+        }, 500)
+       
     }
 
 
@@ -312,24 +313,30 @@ class Voters extends Component{
         return(
             <>
                 <Sidebar path = "Voters"/>
-                <main style={{marginTop : '56px'}}>
-                    <div class="container pt-4">
-                        <div style = {{padding: '5px', fontSize: '25px'}}>
-                            Voter List
+                {this.state.loading ? 
+                        <main style={{marginTop : '56px'}}>
+                            <Loading/>
+                        </main>
+                    :
+                    <main style={{marginTop : '56px'}}>
+                        <div class="container pt-4">
+                            <div style = {{padding: '5px', fontSize: '25px'}}>
+                                Voter List
+                            </div>
+                            <button class = "btn btn-success"  style = {{padding: '10px', margin : '10px'}}
+                            onClick = {this.handleAdd}><i class="fa fa-plus" aria-hidden="true"></i>         Add New</button>
+                            <BootstrapTable
+                                bootstrap4
+                                keyField="id"
+                                data={this.state.voterList}
+                                columns={columns}
+                                pagination={paginationFactory({ sizePerPage: 5 })}
+                                filter = {filterFactory()}
+                                filterPosition="top"
+                            />
                         </div>
-                        <button class = "btn btn-success"  style = {{padding: '10px', margin : '10px'}}
-                        onClick = {this.handleAdd}><i class="fa fa-plus" aria-hidden="true"></i>         Add New</button>
-                        <BootstrapTable
-                            bootstrap4
-                            keyField="id"
-                            data={this.state.voterList}
-                            columns={columns}
-                            pagination={paginationFactory({ sizePerPage: 5 })}
-                            filter = {filterFactory()}
-                            filterPosition="top"
-                        />
-                    </div>
-                </main>
+                    </main>
+                }
 
                 <Modal isOpen={this.state.edit} toggle={this.toggleEdit}>
                     <ModalHeader toggle={this.toggleEdit}>Edit Voter</ModalHeader>

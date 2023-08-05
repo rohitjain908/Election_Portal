@@ -8,6 +8,7 @@ import BootstrapTable from "react-bootstrap-table-next";
 import paginationFactory from "react-bootstrap-table2-paginator";
 import filterFactory, {textFilter, numberFilter } from 'react-bootstrap-table2-filter';
 import { Button,Card,CardTitle,Col,Label,Modal,ModalBody,ModalHeader,Row,Form,FormGroup,Input } from 'reactstrap';
+import Loading from '../../Loading';
 
 class Position extends Component{
 
@@ -21,7 +22,8 @@ class Position extends Component{
             name : '',
             maxCandidates : '',
             adminUniversity : '',
-            positionId : ''
+            positionId : '',
+            loading: true
         }
     }
 
@@ -198,36 +200,42 @@ class Position extends Component{
         this.setState({
             adminUniversity : "IIT BHU"
         })
-        positionsList(body).then(res => {
-            console.log(res);
-            let data = res['data']
-            if(data['message'] == 'success'){
-                console.log("comes in positionList")
-                let positionList = data['postionsList']
-                console.log(positionList)
-                let result = []
-                positionList.map((position) => {
-                    result.push({
-                        name : position['name'],
-                        maxCandidate : position['maxCandidates'],
-                        totalVotes : position['totalVotes'],
-                        action :
-                        <span>
-                            <button class = "btn btn-primary" onClick = {(event) => this.handleEdit(event, position['id'])}><i class="fas fa-edit"></i></button>
-                            <button class = "btn btn-danger"  onClick = {(event) => this.handleDelete(event, position['id'])} style = {{marginLeft : '10px'}}><i class="fa fa-trash" aria-hidden="true"></i></button>
-                    </span>
 
+        setTimeout(()=> {
+            positionsList(body).then(res => {
+                console.log(res);
+                let data = res['data']
+                if(data['message'] == 'success'){
+                    console.log("comes in positionList")
+                    let positionList = data['postionsList']
+                    console.log(positionList)
+                    let result = []
+                    positionList.map((position) => {
+                        result.push({
+                            name : position['name'],
+                            maxCandidate : position['maxCandidates'],
+                            totalVotes : position['totalVotes'],
+                            action :
+                            <span>
+                                <button class = "btn btn-primary" onClick = {(event) => this.handleEdit(event, position['id'])}><i class="fas fa-edit"></i></button>
+                                <button class = "btn btn-danger"  onClick = {(event) => this.handleDelete(event, position['id'])} style = {{marginLeft : '10px'}}><i class="fa fa-trash" aria-hidden="true"></i></button>
+                        </span>
+    
+                        })
+                        console.log("fghjk", result)
                     })
-                    console.log("fghjk", result)
-                })
+    
+                    console.log("result", result)
+    
+                    this.setState({
+                        positionsList : result,
+                        loading: false
+                    })
+                }
+            })
 
-                console.log("result", result)
-
-                this.setState({
-                    positionsList : result
-                })
-            }
-        })
+        }, 500)
+        
     }
 
 
@@ -261,6 +269,11 @@ class Position extends Component{
         return(
             <>
                 <Sidebar path = "Positions"/>
+                {this.state.loading ? 
+                        <main style={{marginTop : '56px'}}>
+                            <Loading/>
+                        </main>
+                    :
                 <main style={{marginTop : '56px', marginBottom : '10px'}}>
                     <div class="container pt-4">
                         <div style = {{padding: '5px', fontSize: '25px'}}>
@@ -279,6 +292,7 @@ class Position extends Component{
                         />
                     </div>                       
                 </main>
+                }
 
 
                 <Modal isOpen={this.state.add} toggle={this.toggleAdd}>

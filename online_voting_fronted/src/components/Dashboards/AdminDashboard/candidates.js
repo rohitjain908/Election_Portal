@@ -10,6 +10,9 @@ import paginationFactory from "react-bootstrap-table2-paginator";
 
 import filterFactory, {textFilter, numberFilter } from 'react-bootstrap-table2-filter';
 import { Button,Card,CardTitle,Col,Label,Modal,ModalBody,ModalHeader,Row,Form,FormGroup,Input } from 'reactstrap';
+import '../../../../src/App.css';
+import Loading from '../../Loading';
+
 
 class Candidates extends Component{
 
@@ -27,7 +30,8 @@ class Candidates extends Component{
             position : '',
             positionId : -1,
             error : '',
-            candidateId : ''
+            candidateId : '',
+            loading: true
         }
     }
 
@@ -244,31 +248,36 @@ class Candidates extends Component{
             adminUniversity : 'IIT BHU'
         })
 
-        candidatesList(body).then(res => {
-            let data = res['data']
-            if(data['message'] == 'success'){
-                let List = data['candidatesList']
-                let result = []
-                List.map((obj) => {
-                    result.push(
-                        {
-                            fullName : obj['fullName'],
-                            position : obj['position'],
-                            bio : obj['bio'],
-                            action :
-                                    <span>
-                                        <button class = "btn btn-primary" onClick = {(event) => this.handleEdit(event, obj['id'])}><i class="fas fa-edit"></i></button>
-                                        <button class = "btn btn-danger"  onClick = {(event) => this.handleDelete(event, obj['id'])} style = {{marginLeft : '10px'}}><i class="fa fa-trash" aria-hidden="true"></i></button>
-                                    </span>
-                        }
-                    )
-                })
+       setTimeout(() => {
+            candidatesList(body).then(res => {
+                let data = res['data']
+                if(data['message'] == 'success'){
+                    let List = data['candidatesList']
+                    let result = []
+                    List.map((obj) => {
+                        result.push(
+                            {
+                                fullName : obj['fullName'],
+                                position : obj['position'],
+                                bio : obj['bio'],
+                                action :
+                                        <span>
+                                            <button class = "btn btn-primary" onClick = {(event) => this.handleEdit(event, obj['id'])}><i class="fas fa-edit"></i></button>
+                                            <button class = "btn btn-danger"  onClick = {(event) => this.handleDelete(event, obj['id'])} style = {{marginLeft : '10px'}}><i class="fa fa-trash" aria-hidden="true"></i></button>
+                                        </span>
+                            }
+                        )
+                    })
 
-                this.setState({
-                    candidatesList : result
-                })
-            }
-        })
+                    this.setState({
+                        candidatesList : result,
+                        loading: false
+                    })
+                }
+            })
+       }, 500);
+
+        
 
         
         positionsList(body).then(res => {
@@ -321,97 +330,106 @@ class Candidates extends Component{
                 text: "Action"
             }
         ];
-        return(
-            <>
-                <Sidebar path = "Candidates"/>
-                <main style={{marginTop : '56px'}}>
-                    <div class="container pt-4">
-                        <div style = {{padding: '5px', fontSize: '25px'}}>
-                            Candidates
-                        </div>
-                        <button class = "btn btn-success"  style = {{padding: '10px', margin : '10px'}}
-                        onClick = {this.handleAdd}><i class="fa fa-plus" aria-hidden="true"></i>         Add New</button>
-                        <BootstrapTable
-                            bootstrap4
-                            keyField="id"
-                            data={this.state.candidatesList}
-                            columns={columns}
-                            pagination={paginationFactory({ sizePerPage: 5 })}
-                            filter = {filterFactory()}
-                            filterPosition="top"
-                        />
-                        
-                    </div>
-                </main>
+       
+            return(
+                <>
+                    <Sidebar path = "Candidates"/>
+                    {this.state.loading ? 
+                        <main style={{marginTop : '56px'}}>
+                            <Loading/>
+                        </main>
+                    :
+                        <main style={{marginTop : '56px'}}>
+                            <div class="container pt-4">
+                                <div style = {{padding: '5px', fontSize: '25px'}}>
+                                    Candidates
+                                </div>
+                                
+                                <button class = "btn btn-success"  style = {{padding: '10px', margin : '10px'}}
+                                onClick = {this.handleAdd}><i class="fa fa-plus" aria-hidden="true"></i>         Add New</button>
+                                <BootstrapTable
+                                    bootstrap4
+                                    keyField="id"
+                                    data={this.state.candidatesList}
+                                    columns={columns}
+                                    pagination={paginationFactory({ sizePerPage: 5 })}
+                                    filter = {filterFactory()}
+                                    filterPosition="top"
+                                />
+                                
+                            </div>
+                        </main> 
+                }
 
 
 
-                <Modal isOpen={this.state.add} toggle={this.toggleAdd}>
-                    <ModalHeader toggle={this.toggleAdd}>Add Candidate</ModalHeader>
-                    <ModalBody>
-                    <form>
-                    {this.state.error && <p class="error">** {this.state.error}</p>}
-                        <div class="form-group">
-                            <label for="fullName"  ><strong>Full Name</strong></label>
-                            <input type="text" class="form-control" id="fullName" name = "fullName" value = {this.state.fullName}  onChange = {this.onChangeInput} placeholder="Full Name"/>
-                        </div>
-                        <div class="form-group">
-                            <label for="bio"><strong>Bio</strong></label>
-                            <input type="text" class="form-control" name = "bio" value = {this.state.bio}  onChange = {this.onChangeInput} id="bio" placeholder="Bio"/>
-                        </div>
-                        <div class="form-group">
-                            <label for="position"><strong>Position</strong></label>
-                            <br/>
-                            <select class="form-control" value={this.state.position} onChange={this.handlePositionChange} id = "position">
-                                <option value="-1">---------</option>
-                                {this.state.positions.map((position) => 
-                                <option value={position.id}>{position.name}</option>
-                                )}
-                          </select>
-                        </div>
-                        <span>
-                            <button class="btn btn-danger" onClick = {this.toggleAdd}>Close</button>
-                            <button class="btn btn-success" onClick = {this.handleCreate} style = {{marginLeft : '290px'}}>Add</button>
-                        </span>
-                        
-                        </form>
-                    </ModalBody>
-                </Modal>
+                    <Modal isOpen={this.state.add} toggle={this.toggleAdd}>
+                        <ModalHeader toggle={this.toggleAdd}>Add Candidate</ModalHeader>
+                        <ModalBody>
+                        <form>
+                        {this.state.error && <p class="error">** {this.state.error}</p>}
+                            <div class="form-group">
+                                <label for="fullName"  ><strong>Full Name</strong></label>
+                                <input type="text" class="form-control" id="fullName" name = "fullName" value = {this.state.fullName}  onChange = {this.onChangeInput} placeholder="Full Name"/>
+                            </div>
+                            <div class="form-group">
+                                <label for="bio"><strong>Bio</strong></label>
+                                <input type="text" class="form-control" name = "bio" value = {this.state.bio}  onChange = {this.onChangeInput} id="bio" placeholder="Bio"/>
+                            </div>
+                            <div class="form-group">
+                                <label for="position"><strong>Position</strong></label>
+                                <br/>
+                                <select class="form-control" value={this.state.position} onChange={this.handlePositionChange} id = "position">
+                                    <option value="-1">---------</option>
+                                    {this.state.positions.map((position) => 
+                                    <option value={position.id}>{position.name}</option>
+                                    )}
+                            </select>
+                            </div>
+                            <span>
+                                <button class="btn btn-danger" onClick = {this.toggleAdd}>Close</button>
+                                <button class="btn btn-success" onClick = {this.handleCreate} style = {{marginLeft : '290px'}}>Add</button>
+                            </span>
+                            
+                            </form>
+                        </ModalBody>
+                    </Modal>
 
 
-                <Modal isOpen={this.state.edit} toggle={this.toggleEdit}>
-                    <ModalHeader toggle={this.toggleEdit}>Edit Candidate</ModalHeader>
-                    <ModalBody>
-                    <form>
-                    {this.state.error && <p class="error">** {this.state.error}</p>}
-                        <div class="form-group">
-                            <label for="fullName"  ><strong>Full Name</strong></label>
-                            <input type="text" class="form-control" id="fullName" name = "fullName" value = {this.state.fullName}  onChange = {this.onChangeInput} placeholder="Full Name"/>
-                        </div>
-                        <div class="form-group">
-                            <label for="bio"><strong>Bio</strong></label>
-                            <input type="text" class="form-control" name = "bio" value = {this.state.bio}  onChange = {this.onChangeInput} id="bio" placeholder="Bio"/>
-                        </div>
-                        <div class="form-group">
-                            <label for="position"><strong>Position</strong></label>
-                            <br/>
-                            <select class="form-control" value={this.state.position} onChange={this.handlePositionChange} id = "position">
-                                <option value="-1">---------</option>
-                                {this.state.positions.map((position) => 
-                                <option value={position.id}>{position.name}</option>
-                                )}
-                          </select>
-                        </div>
-                        <span>
-                            <button class="btn btn-danger" onClick = {this.toggleEdit}>Close</button>
-                            <button class="btn btn-success" onClick = {this.handleUpdate} style = {{marginLeft : '290px'}}>Update</button>
-                        </span>
-                        
-                        </form>
-                    </ModalBody>
-                </Modal>
-            </>
-        )
+                    <Modal isOpen={this.state.edit} toggle={this.toggleEdit}>
+                        <ModalHeader toggle={this.toggleEdit}>Edit Candidate</ModalHeader>
+                        <ModalBody>
+                        <form>
+                        {this.state.error && <p class="error">** {this.state.error}</p>}
+                            <div class="form-group">
+                                <label for="fullName"  ><strong>Full Name</strong></label>
+                                <input type="text" class="form-control" id="fullName" name = "fullName" value = {this.state.fullName}  onChange = {this.onChangeInput} placeholder="Full Name"/>
+                            </div>
+                            <div class="form-group">
+                                <label for="bio"><strong>Bio</strong></label>
+                                <input type="text" class="form-control" name = "bio" value = {this.state.bio}  onChange = {this.onChangeInput} id="bio" placeholder="Bio"/>
+                            </div>
+                            <div class="form-group">
+                                <label for="position"><strong>Position</strong></label>
+                                <br/>
+                                <select class="form-control" value={this.state.position} onChange={this.handlePositionChange} id = "position">
+                                    <option value="-1">---------</option>
+                                    {this.state.positions.map((position) => 
+                                    <option value={position.id}>{position.name}</option>
+                                    )}
+                            </select>
+                            </div>
+                            <span>
+                                <button class="btn btn-danger" onClick = {this.toggleEdit}>Close</button>
+                                <button class="btn btn-success" onClick = {this.handleUpdate} style = {{marginLeft : '290px'}}>Update</button>
+                            </span>
+                            
+                            </form>
+                        </ModalBody>
+                    </Modal>
+                </>
+            )
+        
     }
 }
 
